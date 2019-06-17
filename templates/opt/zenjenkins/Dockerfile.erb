@@ -1,0 +1,17 @@
+FROM jenkins/jenkins:2.164.3-alpine
+
+USER root
+
+ENV JAVA_OPTS="-Djenkins.install.runSetupWizard=false -Duser.timezone=America/Los_Angeles -Dhudson.DNSMultiCast.disabled=true -Dhudson.udp=-1"
+
+# install default plugins
+COPY plugins/plugins.txt /usr/share/jenkins/plugins.txt
+RUN xargs /usr/local/bin/install-plugins.sh < /usr/share/jenkins/plugins.txt
+
+# copy config
+COPY config/*.xml /usr/share/jenkins/ref/
+
+RUN addgroup -g 642 zenuser; \
+    adduser -h "$JENKINS_HOME" -u 642 -G zenuser -D -s /bin/bash zenuser
+
+USER zenuser
