@@ -1,0 +1,19 @@
+version: '3.6'
+services:
+  jenkins:
+    build:
+      context: '/opt/zenjenkins'
+    restart: 'always'
+    user: 'zenuser'
+    ports:
+      - '8080:8080'
+      - '50000:50000'
+    volumes:
+      - type: 'bind'
+        source: '/opt/zenjenkins/data'
+        target: '/var/jenkins_home'
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '50m'
+        max-file: '10'
